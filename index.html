@@ -3,52 +3,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MEMEINTEL AI</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080b12;color:#e9edf5;font-family:Arial,sans-serif}
-header{padding:20px;background:#101622;border-bottom:1px solid #273044;display:flex;justify-content:space-between;align-items:center}
+header{padding:20px;background:#101622;border-bottom:1px solid #273044;display:flex;justify-content:space-between}
 .logo{font-size:21px;font-weight:900;color:#8b9cff}
-.logo span{color:#fff}
-main{padding:18px;max-width:1200px;margin:auto}
-h1{font-size:25px}
-.sub{color:#8994a8;font-size:13px}
-.demo{background:#29213a;color:#d8c4ff;padding:10px;border-radius:8px;font-size:12px}
+main{padding:18px;max-width:1100px;margin:auto}
+.sub,small{color:#8994a8}
+.demo,.status{padding:12px;border-radius:9px;background:#25203a;margin:12px 0;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
-.card{background:#111827;border:1px solid #273044;border-radius:12px;padding:16px}
-.card small{color:#8994a8}
-.value{font-size:23px;font-weight:bold;margin-top:10px}
+.card{background:#111827;border:1px solid #273044;border-radius:12px;padding:16px;margin-bottom:14px}
+.value{font-size:22px;font-weight:bold;margin-top:10px}
 .green{color:#45d6a0}
 .red{color:#ff7185}
 nav{display:flex;gap:8px;overflow:auto;margin:20px 0}
-button{background:#202b40;color:white;border:1px solid #34435e;border-radius:8px;padding:11px 14px;cursor:pointer;white-space:nowrap}
+button{background:#202b40;color:white;border:1px solid #34435e;border-radius:8px;padding:12px;cursor:pointer;white-space:nowrap}
 button.active{background:#5368d9}
-table{width:100%;border-collapse:collapse;font-size:13px}
-td,th{text-align:left;padding:13px 7px;border-bottom:1px solid #273044}
-th{color:#8994a8}
 .panel{display:none}
 .panel.active{display:block}
-.signal{padding:12px;background:#172438;border-radius:8px;margin:10px 0}
-footer{color:#748096;font-size:12px;padding:25px 0}
+.signal{padding:12px;background:#172438;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{text-align:left;padding:12px 5px;border-bottom:1px solid #273044}
+input{width:100%;padding:13px;background:#080b12;color:white;border:1px solid #34435e;border-radius:8px}
+footer{padding:20px 0;color:#8994a8;font-size:12px}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
 <header>
-<div class="logo">MEME<span>INTEL</span> AI</div>
+<div class="logo">MEMEINTEL AI</div>
 <div class="sub">RESEARCH TERMINAL</div>
 </header>
 <main>
 <h1>Intelligence Dashboard</h1>
-<p class="sub">Meme coin research and market intelligence</p>
-<div class="demo">DEMO MODE · Sample data only · No live trading</div>
+<p class="sub">Solana blockchain intelligence platform</p>
+
+<div class="demo">READ-ONLY MODE · No wallet connected · No real trades</div>
 
 <div class="grid">
-<div class="card"><small>Tracked tokens</small><div class="value">128</div></div>
-<div class="card"><small>Market sentiment</small><div class="value green">Neutral</div></div>
-<div class="card"><small>Risk alerts</small><div class="value">07</div></div>
-<div class="card"><small>Portfolio (simulated)</small><div class="value">$1,000</div></div>
+<div class="card"><small>Network</small><div class="value" id="network">Checking...</div></div>
+<div class="card"><small>Connection</small><div class="value" id="connection">Checking...</div></div>
+<div class="card"><small>Current slot</small><div class="value" id="slot">--</div></div>
+<div class="card"><small>Epoch</small><div class="value" id="epoch">--</div></div>
 </div>
 
 <nav>
@@ -61,95 +59,122 @@ footer{color:#748096;font-size:12px;padding:25px 0}
 
 <section id="overview" class="panel active">
 <div class="card">
-<h3>Market Intelligence</h3>
-<p class="sub">Your research command centre</p>
-<div class="signal">Market data connection: Not connected</div>
-<div class="signal">Social intelligence: Not connected</div>
-<div class="signal">AI analysis: Awaiting API configuration</div>
+<h2>Live Solana Intelligence</h2>
+<div id="liveStatus" class="signal">Connecting to Solana...</div>
+<div id="epochDetails" class="signal">Waiting for network information...</div>
+<button onclick="loadSolana()">Refresh network data</button>
+<p class="sub" id="updated">Not yet updated</p>
 </div>
 </section>
 
 <section id="tokens" class="panel">
 <div class="card">
-<h3>Token Watchlist</h3>
-<p class="sub">Illustrative assets and fictional sample values</p>
-<table>
-<thead><tr><th>Token</th><th>Price</th><th>24H</th><th>Risk</th></tr></thead>
-<tbody id="tokensTable"></tbody>
-</table>
+<h2>Token Scanner</h2>
+<p class="sub">Live token market feeds are not connected yet.</p>
+<div class="signal">Token discovery: Pending integration</div>
+<div class="signal">Liquidity verification: Pending integration</div>
 </div>
 </section>
 
 <section id="research" class="panel">
 <div class="card">
-<h3>AI Research Centre</h3>
-<p class="sub">Research workflow prototype</p>
-<input id="query" placeholder="Enter a token or research topic" style="width:100%;padding:13px;background:#080b12;color:white;border:1px solid #34435e;border-radius:8px">
+<h2>AI Research Centre</h2>
+<input id="query" placeholder="Enter token name or research topic">
 <br><br>
-<button onclick="research()">Analyse research topic</button>
-<div id="researchResult" class="signal">Waiting for research input.</div>
-<p class="sub">AI provider connection required for genuine AI analysis.</p>
+<button onclick="research()">Save research topic</button>
+<div id="researchResult" class="signal">Waiting for input.</div>
+<p class="sub">An AI provider and verified research sources are needed for actual AI analysis.</p>
 </div>
 </section>
 
 <section id="risk" class="panel">
 <div class="card">
-<h3>Risk Intelligence Engine</h3>
-<div class="signal">Liquidity: Not verified</div>
-<div class="signal">Contract security: Not verified</div>
-<div class="signal">Holder concentration: Not verified</div>
-<div class="signal">Developer history: Not verified</div>
-<p class="sub">A real risk score requires verified blockchain data.</p>
+<h2>Risk Intelligence</h2>
+<div class="signal">Contract security: Not checked</div>
+<div class="signal">Liquidity: Not checked</div>
+<div class="signal">Holder concentration: Not checked</div>
+<div class="signal">Developer history: Not checked</div>
+<p class="sub">No risk rating is generated without verified token data.</p>
 </div>
 </section>
 
 <section id="portfolio" class="panel">
 <div class="card">
-<h3>Paper Trading Portfolio</h3>
-<p class="sub">Simulation only — no real funds</p>
-<div class="value">$1,000.00</div>
-<p class="green">Starting simulated balance</p>
-<input id="amount" type="number" placeholder="Simulation amount" style="width:100%;padding:12px;background:#080b12;color:white;border:1px solid #34435e;border-radius:8px">
+<h2>Paper Portfolio</h2>
+<p class="sub">Simulation only</p>
+<div class="value" id="balance">$1,000.00</div>
+<input id="amount" type="number" min="0.01" max="1000" placeholder="Simulated allocation">
 <br><br>
-<button onclick="simulate()">Simulate allocation</button>
-<div id="simulation" class="signal">No simulated allocation yet.</div>
+<button onclick="allocate()">Simulate allocation</button>
+<div id="allocation" class="signal">No allocation made.</div>
 </div>
 </section>
 
 <footer>
-MEMEINTEL AI · Development Prototype<br>
-All displayed token values are fictional. Not financial advice.
+MEMEINTEL AI · Read-only development build<br>
+Network information comes from Solana RPC. Token prices and portfolio values are not live.
 </footer>
 </main>
+
 <script>
-const sample=[
-{name:"BONK",price:"$0.000025",change:"+4.2%",risk:"Medium"},
-{name:"WIF",price:"$1.20",change:"-2.1%",risk:"High"},
-{name:"PEPE",price:"$0.000009",change:"+7.8%",risk:"High"},
-{name:"DOGE",price:"$0.18",change:"+1.3%",risk:"Medium"}
-];
-document.getElementById("tokensTable").innerHTML=sample.map(t=>
-`<tr><td>${t.name}</td><td>${t.price}</td><td>${t.change}</td><td>${t.risk}</td></tr>`
-).join("");
-function show(id,btn){
-document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-btn.classList.add("active");
+function show(id,button){
+document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+button.classList.add('active');
 }
+
+async function loadSolana(){
+const connection=document.getElementById('connection');
+const status=document.getElementById('liveStatus');
+connection.textContent='Connecting...';
+status.textContent='Requesting live Solana information...';
+
+try{
+const response=await fetch('/api/solana');
+const data=await response.json();
+
+if(!response.ok||!data.success)throw new Error(data.error||'Connection failed');
+
+document.getElementById('network').textContent=data.network;
+connection.textContent='Connected';
+connection.className='value green';
+document.getElementById('slot').textContent=Number(data.slot).toLocaleString();
+document.getElementById('epoch').textContent=data.epoch.number;
+status.textContent='Solana RPC is responding. Network health: '+data.health;
+document.getElementById('epochDetails').textContent=
+'Block height: '+Number(data.epoch.blockHeight).toLocaleString()+
+' | Epoch slot: '+data.epoch.slotIndex+
+' / '+data.epoch.slotsInEpoch+
+' | Transactions: '+(data.epoch.transactionCount??'Unavailable');
+document.getElementById('updated').textContent='Updated: '+new Date(data.updatedAt).toLocaleString();
+}catch(error){
+connection.textContent='Unavailable';
+connection.className='value red';
+status.textContent='Could not retrieve network data: '+error.message;
+document.getElementById('network').textContent='Solana';
+}
+}
+
 function research(){
-const q=document.getElementById("query").value.trim();
-document.getElementById("researchResult").textContent=q?
-"Research topic saved: "+q+". Connect a verified data source and AI provider to generate real analysis.":
-"Please enter a research topic.";
+const q=document.getElementById('query').value.trim();
+document.getElementById('researchResult').textContent=
+q?'Research topic saved locally: '+q+'. AI analysis is not yet connected.':'Enter a research topic.';
 }
-function simulate(){
-const amount=Number(document.getElementById("amount").value);
-document.getElementById("simulation").textContent=
-amount>0&&amount<=1000?
-"Simulation allocation: $"+amount.toFixed(2)+". Remaining simulated balance: $"+(1000-amount).toFixed(2):
-"Enter an amount between $0.01 and $1,000.";
+
+let balance=1000;
+function allocate(){
+const amount=Number(document.getElementById('amount').value);
+if(!Number.isFinite(amount)||amount<=0||amount>balance){
+document.getElementById('allocation').textContent='Enter an amount within your remaining simulated balance.';
+return;
 }
+balance-=amount;
+document.getElementById('balance').textContent='$'+balance.toFixed(2);
+document.getElementById('allocation').textContent='Simulated allocation: $'+amount.toFixed(2)+'. Remaining: $'+balance.toFixed(2);
+}
+
+loadSolana();
 </script>
 </body>
 </html>
